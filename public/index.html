@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MusicMan — AI Music Generator</title>
+  <meta name="description" content="Turn an idea into a full song with AI." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="logo">♫</span> MusicMan</div>
+    <div class="credits" id="credits" title="Remaining SunoAPI credits">Credits: …</div>
+  </header>
+
+  <main class="layout">
+    <section class="card composer">
+      <h1>Create a song</h1>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-mode="simple" role="tab" aria-selected="true">Simple</button>
+        <button class="tab" data-mode="custom" role="tab" aria-selected="false">Custom</button>
+      </div>
+
+      <form id="genForm" autocomplete="off">
+        <!-- Simple mode -->
+        <div class="mode-simple">
+          <label for="prompt">Describe your song</label>
+          <textarea id="prompt" maxlength="3000" rows="4" placeholder="An upbeat summer pop song about road trips with friends"></textarea>
+          <div class="chips" id="ideaChips"></div>
+        </div>
+
+        <!-- Custom mode -->
+        <div class="mode-custom hidden">
+          <label for="title">Title <span class="muted">(optional)</span></label>
+          <input id="title" maxlength="80" placeholder="Midnight Drive" />
+
+          <div class="label-row">
+            <label for="lyrics">Lyrics</label>
+            <button type="button" class="link" id="lyricsToggle">✨ Write lyrics with AI</button>
+          </div>
+          <div class="lyrics-helper hidden" id="lyricsHelper">
+            <input id="lyricsPrompt" maxlength="200" placeholder="What should the lyrics be about? (max 200 chars)" />
+            <button type="button" class="btn small" id="lyricsBtn">Generate</button>
+          </div>
+          <textarea id="lyrics" maxlength="5000" rows="8" placeholder="[Verse]&#10;Night city lights shining bright&#10;&#10;[Chorus]&#10;..."></textarea>
+          <div class="counter"><span id="lyricsCount">0</span>/5000</div>
+
+          <label for="negativeTags">Avoid these styles <span class="muted">(optional)</span></label>
+          <input id="negativeTags" maxlength="1000" placeholder="heavy metal, screaming" />
+
+          <div class="grid2">
+            <div>
+              <label for="vocalGender">Vocals</label>
+              <select id="vocalGender">
+                <option value="">Any</option>
+                <option value="f">Female</option>
+                <option value="m">Male</option>
+              </select>
+            </div>
+            <div>
+              <label for="duration">Length: <span id="durationVal">2:00</span></label>
+              <input type="range" id="duration" min="10" max="360" step="5" value="120" />
+            </div>
+          </div>
+
+          <details class="advanced">
+            <summary>Advanced</summary>
+            <label for="styleWeight">Style adherence: <span id="styleWeightVal">0.65</span></label>
+            <input type="range" id="styleWeight" min="0" max="1" step="0.01" value="0.65" />
+            <label for="weirdness">Weirdness: <span id="weirdnessVal">0.50</span></label>
+            <input type="range" id="weirdness" min="0" max="1" step="0.01" value="0.5" />
+            <label for="variety">Variety between versions</label>
+            <select id="variety">
+              <option value="0">Off — exact style</option>
+              <option value="1" selected>Normal</option>
+              <option value="2">High</option>
+              <option value="3">Extra</option>
+              <option value="4">Max</option>
+            </select>
+          </details>
+        </div>
+
+        <!-- Shared -->
+        <label for="style">Style / genre <span class="muted">(optional in Simple mode)</span></label>
+        <input id="style" maxlength="1000" placeholder="lo-fi, chill, mellow piano" />
+        <div class="chips" id="styleChips"></div>
+
+        <div class="grid2">
+          <div>
+            <label for="model">Model</label>
+            <select id="model">
+              <option value="V6" selected>V6 — best quality</option>
+              <option value="V6_WILD">V6 Wild — bolder, more creative</option>
+              <option value="V6_MINI">V6 Mini — fastest</option>
+            </select>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="instrumental" />
+            <span class="slider"></span>
+            <span>Instrumental (no vocals)</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn primary" id="genBtn">🎵 Generate music</button>
+        <p class="error hidden" id="formError" role="alert"></p>
+      </form>
+    </section>
+
+    <section class="results">
+      <div class="results-head">
+        <h2>Your tracks</h2>
+        <button class="link" id="clearBtn">Clear history</button>
+      </div>
+      <p class="muted small">Each request creates two versions. Audio is usually streamable in under a minute and fully ready in 2–3 minutes. Files are kept by SunoAPI for about 14 days — download what you want to keep.</p>
+      <div id="tasks"></div>
+      <div class="empty" id="empty">
+        <div class="empty-icon">🎧</div>
+        <p>No songs yet. Describe one and hit <b>Generate</b>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">Powered by <a href="https://sunoapi.org" target="_blank" rel="noopener">SunoAPI.org</a></footer>
+  <script src="app.js"></script>
+</body>
+</html>

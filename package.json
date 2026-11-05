@@ -1,0 +1,8 @@
+{
+  "name": "musicman",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Generate AI music with SunoAPI.org — static site + Netlify Functions",
+  "type": "module",
+  "engines": { "node": ">=18" }
+}
